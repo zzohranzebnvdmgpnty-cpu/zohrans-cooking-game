@@ -1,0 +1,340 @@
+```css
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+:root {
+    --orange: #ffad42;
+    --yellow: #ffda79;
+    --dark: #191714;
+    --panel: #28251f;
+    --card: #353128;
+    --green: #64d99a;
+    --red: #ff7070;
+    --text: #fffaf0;
+    --muted: #c4bcad;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Nunito', Arial, sans-serif;
+    background:
+        radial-gradient(ellipse at top, #423326 0%, transparent 60%),
+        var(--dark);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+button {
+    font: inherit;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s, box-shadow 0.2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.12);
+}
+
+button:active {
+    transform: scale(0.97);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(28, 25, 21, 0.95);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid #5a4631;
+    padding: 15px 4%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: clamp(18px, 3vw, 28px);
+    font-weight: 900;
+    color: var(--yellow);
+    letter-spacing: -0.5px;
+}
+
+.stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.stat {
+    background: linear-gradient(135deg, #40382b, #2b2822);
+    padding: 9px 15px;
+    border-radius: 12px;
+    border: 1px solid #665139;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.restaurant {
+    max-width: 1350px;
+    padding: 25px;
+    margin: auto;
+}
+
+.section-title {
+    font-size: 21px;
+    margin: 0 0 17px;
+    color: var(--yellow);
+    font-weight: 900;
+}
+
+.customers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.customer {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(145deg, #393329, #26231e);
+    border: 1px solid #514536;
+    border-radius: 19px;
+    padding: 17px;
+    text-align: center;
+    box-shadow: 0 7px 18px #0003;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.customer:hover {
+    transform: translateY(-4px);
+    border-color: var(--orange);
+}
+
+.customer.active {
+    border: 2px solid var(--orange);
+    box-shadow: 0 0 20px #ffad4226;
+}
+
+.person {
+    font-size: 58px;
+    line-height: 1.3;
+    animation: appear 0.4s ease;
+}
+
+.customer strong {
+    font-size: 17px;
+}
+
+.order {
+    background: #171613;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+}
+
+.patience {
+    width: 100%;
+    height: 7px;
+    background: #554b3d;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 12px;
+}
+
+.patience-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 20px;
+    transition: width 0.4s, background 0.4s;
+}
+
+.kitchen {
+    background: linear-gradient(145deg, #302a22, #211f1b);
+    padding: clamp(15px, 3vw, 28px);
+    border-radius: 25px;
+    border: 1px solid #56432e;
+    box-shadow: 0 15px 40px #0004;
+}
+
+.kitchen-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.panel {
+    background: #211f1b;
+    padding: 20px;
+    border: 1px solid #443a2e;
+    border-radius: 19px;
+    min-width: 0;
+}
+
+.panel h3 {
+    color: var(--yellow);
+    margin-top: 0;
+}
+
+.ingredient-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.ingredient {
+    color: var(--text);
+    background: linear-gradient(145deg, #3b362d, #2a2721);
+    border: 1px solid #514738;
+    border-radius: 14px;
+    padding: 13px 5px;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.ingredient span {
+    display: block;
+    font-size: 30px;
+    margin-bottom: 5px;
+}
+
+.ingredient.selected {
+    background: linear-gradient(145deg, #735329, #49371e);
+    border: 2px solid var(--orange);
+    box-shadow: 0 0 18px #ffad4220;
+}
+
+.cooking-area {
+    text-align: center;
+    padding: 22px;
+    border-radius: 18px;
+    background:
+        radial-gradient(ellipse at center, #57402b 0%, #30271e 50%, #201e19 100%);
+    border: 1px solid #6a4d30;
+}
+
+.food-display {
+    min-height: 125px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(65px, 8vw, 95px);
+    filter: drop-shadow(0 10px 10px #0005);
+}
+
+#dishName {
+    color: var(--yellow);
+    margin: 5px 0;
+}
+
+.status {
+    color: var(--muted);
+    min-height: 42px;
+    line-height: 1.6;
+}
+
+.main-button,
+.serve-button,
+.clear-button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 13px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 900;
+}
+
+.main-button {
+    background: linear-gradient(135deg, #ffc768, #ff9c2e);
+    color: #34200b;
+    box-shadow: 0 5px 15px #ffad4220;
+}
+
+.serve-button {
+    background: linear-gradient(135deg, #8df0b4, #45c981);
+    color: #103a24;
+}
+
+.clear-button {
+    background: #403b33;
+    color: var(--text);
+    border: 1px solid #5a5043;
+}
+
+.message {
+    background: linear-gradient(100deg, #352d22, #29241d);
+    border: 1px solid #665139;
+    border-left: 5px solid var(--orange);
+    padding: 15px 18px;
+    border-radius: 12px;
+    margin: 18px 0;
+    line-height: 1.6;
+    animation: appear 0.3s ease;
+}
+
+.kitchen-footer {
+    text-align: center;
+    color: #a69b8b;
+    padding: 25px 0 5px;
+    font-size: 13px;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 750px) {
+    header {
+        position: static;
+        padding: 15px;
+    }
+
+    .restaurant {
+        padding: 14px;
+    }
+
+    .kitchen-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .customers {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ingredient-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 380px) {
+    .customers {
+        grid-template-columns: 1fr;
+    }
+
+    .ingredient-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+```
