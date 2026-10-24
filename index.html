@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zohran's Real Kitchen</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #171717;
+    color: white;
+}
+
+header {
+    background: #252525;
+    padding: 18px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-bottom: 3px solid #f6a623;
+}
+
+header h1 {
+    margin: 0;
+    color: #ffbd4a;
+    font-size: 25px;
+}
+
+.stats {
+    display: flex;
+    gap: 18px;
+    font-weight: bold;
+}
+
+.stat {
+    background: #383838;
+    padding: 10px 14px;
+    border-radius: 10px;
+}
+
+.restaurant {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+.section-title {
+    color: #ffbd4a;
+    margin-bottom: 12px;
+}
+
+.customers {
+    display: flex;
+    gap: 15px;
+    overflow-x: auto;
+    padding: 8px 0 18px;
+}
+
+.customer {
+    min-width: 155px;
+    background: #303030;
+    padding: 14px;
+    border-radius: 14px;
+    text-align: center;
+    border: 2px solid #444;
+    transition: 0.2s;
+}
+
+.customer.active {
+    border-color: #ffbd4a;
+    background: #403629;
+}
+
+.person {
+    font-size: 58px;
+    line-height: 1.4;
+}
+
+.order {
+    background: #1d1d1d;
+    padding: 10px;
+    border-radius: 9px;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.patience {
+    width: 100%;
+    height: 7px;
+    background: #555;
+    border-radius: 10px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.patience-fill {
+    width: 100%;
+    height: 100%;
+    background: #45ce75;
+    transition: width 0.5s;
+}
+
+.kitchen {
+    background: #292929;
+    border-radius: 18px;
+    padding: 20px;
+    border: 1px solid #444;
+}
+
+.kitchen-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.panel {
+    background: #202020;
+    padding: 18px;
+    border-radius: 14px;
+    border: 1px solid #414141;
+}
+
+.panel h3 {
+    margin-top: 0;
+    color: #ffbd4a;
+}
+
+.ingredient-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 10px;
+    padding: 13px 8px;
+    transition: 0.15s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.15);
+}
+
+.ingredient {
+    background: #383838;
+    color: white;
+    border: 1px solid #555;
+}
+
+.ingredient.selected {
+    background: #66502c;
+    border: 2px solid #ffbd4a;
+}
+
+.ingredient span {
+    display: block;
+    font-size: 29px;
+    margin-bottom: 6px;
+}
+
+.cooking-area {
+    text-align: center;
+    background: #303030;
+    padding: 20px;
+    border-radius: 14px;
+}
+
+.food-display {
+    font-size: 75px;
+    min-height: 100px;
+    padding: 12px;
+}
+
+.status {
+    color: #ccc;
+    min-height: 42px;
+    line-height: 1.5;
+}
+
+.main-button {
+    background: #ffad32;
+    color: #222;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.serve-button {
+    background: #39c879;
+    color: #102819;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.clear-button {
+    background: #454545;
+    color: white;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.kitchen-footer {
+    text-align: center;
+    color: #aaa;
+    padding: 20px 0 5px;
+}
+
+.message {
+    background: #383838;
+    border-left: 4px solid #ffbd4a;
+    padding: 12px;
+    border-radius: 8px;
+    margin: 15px 0;
+    min-height: 45px;
+}
+
+@media (max-width: 700px) {
+    .kitchen-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .stats {
+        gap: 6px;
+        font-size: 12px;
+    }
+
+    header h1 {
+        font-size: 20px;
+    }
+
+    .restaurant {
+        padding: 12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🍳 ZOHRAN'S REAL KITCHEN</h1>
+
+    <div class="stats">
+        <div class="stat">💰 $<span id="money">0</span></div>
+        <div class="stat">⭐ <span id="score">0</span></div>
+        <div class="stat">📅 Day <span id="day">1</span></div>
+    </div>
+</header>
+
+<main class="restaurant">
+
+    <h2 class="section-title">🧑‍🤝‍🧑 YOUR CUSTOMERS</h2>
+
+    <div class="customers" id="customers"></div>
+
+    <div class="message" id="message">
+        Welcome to your restaurant! Select a customer's order and start cooking.
+    </div>
+
+    <section class="kitchen">
+
+        <h2 class="section-title">👨‍🍳 THE KITCHEN</h2>
+
+        <div class="kitchen-layout">
+
+            <div class="panel">
+                <h3>🥬 Ingredients</h3>
+                <p style="color:#aaa">
+                    Click the ingredients needed for the customer's order.
+                </p>
+
+                <div class="ingredient-grid">
+
+                    <button class="ingredient" data-item="bun">
+                        <span>🍞</span>Bun
+                    </button>
+
+                    <button class="ingredient" data-item="patty">
+                        <span>🥩</span>Patty
+                    </button>
+
+                    <button class="ingredient" data-item="cheese">
+                        <span>🧀</span>Cheese
+                    </button>
+
+                    <button class="ingredient" data-item="lettuce">
+                        <span>🥬</span>Lettuce
+                    </button>
+
+                    <button class="ingredient" data-item="tomato">
+                        <span>🍅</span>Tomato
+                    </button>
+
+                    <button class="ingredient" data-item="dough">
+                        <span>🫓</span>Pizza dough
+                    </button>
+
+                    <button class="ingredient" data-item="sauce">
+                        <span>🍅</span>Pizza sauce
+                    </button>
+
+                    <button class="ingredient" data-item="fries">
+                        <span>🍟</span>Potatoes
+                    </button>
+
+                    <button class="ingredient" data-item="drink">
+                        <span>🥤</span>Drink
+                    </button>
+
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>🔥 Cooking Station</h3>
+
+                <div class="cooking-area">
+
+                    <div class="food-display" id="foodDisplay">
+                        🍳
+                    </div>
+
+                    <h3 id="dishName">Empty Cooking Station</h3>
+
+                    <p class="status" id="status">
+                        Choose an order, then select the ingredients.
+                    </p>
+
+                    <button class="main-button" id="cookButton">
+                        🔥 COOK FOOD
+                    </button>
+
+                    <button class="serve-button" id="serveButton">
+                        🍽️ SERVE CUSTOMER
+                    </button>
+
+                    <button class="clear-button" id="clearButton">
+                        🧹 CLEAR INGREDIENTS
+                    </button>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="kitchen-footer">
+            Made with ❤️ by Zohran | Restaurant Simulator
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+const recipes = {
+    "Burger": {
+        ingredients: ["bun", "patty", "cheese", "lettuce", "tomato"],
+        emoji: "🍔",
+        price: 25
+    },
+
+    "Cheeseburger": {
+        ingredients: ["bun", "patty", "cheese"],
+        emoji: "🍔",
+        price: 20
+    },
+
+    "Pizza": {
+        ingredients: ["dough", "sauce", "cheese", "tomato"],
+        emoji: "🍕",
+        price: 30
+    },
+
+    "Fries": {
+        ingredients: ["fries"],
+        emoji: "🍟",
+        price: 12
+    },
+
+    "Cold Drink": {
+        ingredients: ["drink"],
+        emoji: "🥤",
+        price: 8
+    }
+};
+
+const people = [
+    { name: "Alex", emoji: "👨🏻", order: "Burger" },
+    { name: "Sophia", emoji: "👩🏼", order: "Pizza" },
+    { name: "Daniel", emoji: "👨🏽", order: "Fries" },
+    { name: "Emma", emoji: "👩🏻", order: "Cheeseburger" },
+    { name: "Oliver", emoji: "👨🏿", order: "Cold Drink" },
+    { name: "Mia", emoji: "👩🏽", order: "Pizza" },
+    { name: "Noah", emoji: "👨🏼", order: "Burger" }
+];
+
+let customers = [];
+let selectedCustomer = -1;
+let ingredients = [];
+let cookedFood = null;
+let cooking = false;
+let money = 0;
+let score = 0;
+let day = 1;
+let nextCustomerId = 0;
+
+const customerArea = document.getElementById("customers");
+const message = document.getElementById("message");
+
+function newCustomer() {
+    const person = people[Math.floor(Math.random() * people.length)];
+    const recipe = recipes[person.order];
+
+    return {
+        id: nextCustomerId++,
+        name: person.name,
+        emoji: person.emoji,
+        order: person.order,
+        patience: 100,
+        served: false
+    };
+}
+
+function addCustomer() {
+    if (customers.length >= 5) return;
+
+    customers.push(newCustomer());
+
+    if (selectedCustomer === -1) {
+        selectedCustomer = customers.findIndex(c => !c.served);
+    }
+
+    renderCustomers();
+}
+
+function renderCustomers() {
+    customerArea.innerHTML = "";
+
+    customers.forEach((customer, index) => {
+        const card = document.createElement("div");
+
+        card.className = "customer";
+
+        if (index === selectedCustomer) {
+            card.classList.add("active");
+        }
+
+        if (customer.served) {
+            card.style.opacity = "0.55";
+        }
+
+        card.innerHTML = `
+            <div class="person">${customer.emoji}</div>
+            <strong>${customer.name}</strong>
+            <div class="order">
+                ${customer.served ? "✅ Served!" :
+                "Wants " + recipes[customer.order].emoji +
+                "<br>" + customer.order}
+            </div>
+            <div class="patience">
+                <div class="patience-fill"
+                style="width:${customer.patience}%;
+                background:${customer.patience < 30 ? '#ff5555' : '#45ce75'}">
+                </div>
+            </div>
+            <button class="main-button" style="margin-top:10px"
+            ${customer.served ? "disabled" : ""}>
+                ${customer.served ? "Finished" : "Select"}
+            </button>
+        `;
+
+        card.querySelector("button").addEventListener("click", () => {
+            if (customer.served) return;
+
+            selectedCustomer = index;
+            ingredients = [];
+            cookedFood = null;
+            cooking = false;
+            updateKitchen();
+            renderCustomers();
+            showMessage(customer.name + " ordered " + customer.order + "!");
+        });
+
+        customerArea.appendChild(card);
+    });
+}
+
+function showMessage(text) {
+    message.textContent = text;
+}
+
+function updateKitchen() {
+    document.querySelectorAll(".ingredient").forEach(button => {
+        button.classList.toggle(
+            "selected",
+            ingredients.includes(button.dataset.item)
+        );
+    });
+
+    const foodDisplay = document.getElementById("foodDisplay");
+    const dishName = document.getElementById("dishName");
+    const status = document.getElementById("status");
+
+    if (cooking) {
+        foodDisplay.textContent = "🔥";
+        dishName.textContent = "Cooking...";
+        status.textContent = "Please wait for your food to finish cooking!";
+    } else if (cookedFood) {
+        foodDisplay.textContent = cookedFood.emoji;
+        dishName.textContent = cookedFood.name;
+        status.textContent = "Your food is ready! Serve it to the customer.";
+    } else {
+        foodDisplay.textContent = ingredients.length ? "🥗" : "🍳";
+        dishName.textContent = ingredients.length
+            ? ingredients.length + " ingredient(s) selected"
+            : "Empty Cooking Station";
+
+        status.textContent = ingredients.length
+            ? "Keep going, or press COOK FOOD when ready."
+            : "Choose ingredients for the order.";
+    }
+}
+
+document.querySelectorAll(".ingredient").forEach(button => {
+    button.addEventListener("click", () => {
+        if (cooking || cookedFood) {
+            showMessage("Clear the station before selecting new ingredients!");
+            return;
+        }
+
+        const item = button.dataset.item;
+
+        if (ingredients.includes(item)) {
+            ingredients = ingredients.filter(i => i !== item);
+        } else {
+            ingredients.push(item);
+        }
+
+        updateKitchen();
+    });
+});
+
+document.getElementById("cookButton").addEventListener("click", () => {
+    if (selectedCustomer === -1 || !customers[selectedCustomer]) {
+        showMessage("Select a customer first!");
+        return;
+    }
+
+    if (customers[selectedCustomer].served) {
+        showMessage("Choose a customer who still needs food!");
+        return;
+    }
+
+    if (cooking || cookedFood) {
+        showMessage("Your cooking station is already busy!");
+        return;
+    }
+
+    const recipe = recipes[customers[selectedCustomer].order];
+
+    if (
+        ingredients.length !== recipe.ingredients.length ||
+        !recipe.ingredients.every(item => ingredients.includes(item))
+    ) {
+        showMessage(
+            "❌ Wrong ingredients! You need: " +
+            recipe.ingredients.join(", ") + "."
+        );
+        return;
+    }
+
+    cooking = true;
+    updateKitchen();
+    showMessage("🔥 Cooking " + customers[selectedCustomer].order + "...");
+
+    setTimeout(() => {
+        cooking = false;
+        cookedFood = {
+            name: customers[selectedCustomer]?.order || "Food",
+            emoji: recipe.emoji,
+            price: recipe.price
+        };
+
+        updateKitchen();
+        showMessage("✅ Perfect! Your food is ready to serve!");
+    }, 3000);
+});
+
+document.getElementById("serveButton").addEventListener("click", () => {
+    if (!cookedFood) {
+        showMessage("Cook the food first!");
+        return;
+    }
+
+    const customer = customers[selectedCustomer];
+
+    if (!customer || customer.served) {
+        showMessage("Select a customer who needs food!");
+        return;
+    }
+
+    money += cookedFood.price;
+    score += 10;
+
+    if (customer.patience < 30) {
+        money = Math.max(0, money - 5);
+        showMessage(
+            "😅 " + customer.name +
+            " received the food, but it took too long! $5 tip lost."
+        );
+    } else {
+        showMessage(
+            "🎉 Great job! " + customer.name +
+            " enjoyed the " + customer.order +
+            "! You earned $" + cookedFood.price + "."
+        );
+    }
+
+    customer.served = true;
+
+    document.getElementById("money").textContent = money;
+    document.getElementById("score").textContent = score;
+
+    if (score > 0 && score % 50 === 0) {
+        day++;
+        document.getElementById("day").textContent = day;
+        showMessage("🏆 LEVEL UP! Welcome to restaurant day " + day + "!");
+    }
+
+    ingredients = [];
+    cookedFood = null;
+    cooking = false;
+
+    updateKitchen();
+    renderCustomers();
+
+    setTimeout(() => {
+        customers = customers.filter(c => !c.served);
+
+        if (customers.length < 5) {
+            addCustomer();
+        }
+
+        if (selectedCustomer >= customers.length) {
+            selectedCustomer = customers.length ? 0 : -1;
+        }
+
+        renderCustomers();
+    }, 1500);
+});
+
+document.getElementById("clearButton").addEventListener("click", () => {
+    if (cooking) {
+        showMessage("Wait until cooking finishes!");
+        return;
+    }
+
+    ingredients = [];
+    cookedFood = null;
+    updateKitchen();
+    showMessage("🧹 Cooking station cleaned!");
+});
+
+setInterval(() => {
+    let changed = false;
+
+    customers.forEach(customer => {
+        if (!customer.served) {
+            customer.patience = Math.max(0, customer.patience - 2);
+            changed = true;
+        }
+    });
+
+    if (changed) renderCustomers();
+}, 1500);
+
+for (let i = 0; i < 3; i++) {
+    addCustomer();
+}
+
+updateKitchen();
+</script>
+
+</body>
+</html>
